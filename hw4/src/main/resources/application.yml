@@ -1,0 +1,13 @@
+questions:
+  files:
+    - filePath: questions/questions.csv
+      locale: default
+    - filePath: questions/questions_ru_RU.csv
+      locale: ru-RU
+  pass-rate: 0.5
+
+spring:
+  messages:
+    basename: i18n/messages
+  main:
+    allow-circular-references: true
