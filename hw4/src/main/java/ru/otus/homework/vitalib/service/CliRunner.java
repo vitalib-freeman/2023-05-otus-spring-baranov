@@ -25,6 +25,8 @@ public class CliRunner {
 
     private final MessageProvider messageProvider;
 
+    private final QuestionService questionService;
+
     public void run() {
         String userName = getUserName();
         List<Answer> answers = getUserAnswers(userName);
@@ -34,8 +36,8 @@ public class CliRunner {
 
     public void printResult(boolean hasPass) {
         String result = hasPass
-          ? messageProvider.getTestPassMessage()
-          : messageProvider.getTestFailMessage();
+          ? messageProvider.getTranslation("strings.resultPass")
+          : messageProvider.getTranslation("strings.resultFail");
         writer.write(String.format("%s\n", result));
     }
 
@@ -45,14 +47,14 @@ public class CliRunner {
     }
 
     public List<Answer> getUserAnswers(String userName) {
-        writer.write(String.format("%s\n", messageProvider.getTestWelcomeMessage(userName)));
-        List<Question> questions = messageProvider.getQuestions();
+        writer.write(String.format("%s\n", messageProvider.getTranslation("strings.question", userName)));
+        List<Question> questions = questionService.getQuestions();
         List<Answer> answers = getAnswers(questions);
         return answers;
     }
 
     public String getUserName() {
-        writer.write(messageProvider.getGreetingMessage());
+        writer.write(messageProvider.getTranslation("strings.hello"));
         return reader.read();
     }
 

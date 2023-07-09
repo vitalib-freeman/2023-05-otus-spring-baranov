@@ -7,6 +7,7 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 import ru.otus.homework.vitalib.service.CliRunner;
+import ru.otus.homework.vitalib.service.MessageProvider;
 
 import java.util.Objects;
 
@@ -14,6 +15,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class TestsRunner {
     private final CliRunner cliRunner;
+
+    private final MessageProvider messageProvider;
 
     private String userName;
 
@@ -25,16 +28,17 @@ public class TestsRunner {
         cliRunner.run();
     }
 
+
     @ShellMethod(value = "Login command", key = {"l", "login"})
     public String login(@ShellOption("userName") String userName, @ShellOption("password") String userPassword) {
         this.userName = userName;
         this.userPassword = userPassword;
-        return String.format("Добро пожаловать: %s", userName);
+        return String.format(messageProvider.getTranslation("strings.greeting", userName));
     }
 
     private Availability isUserLoggedIn() {
         return Objects.nonNull(userName) && Objects.nonNull(userPassword)
           ? Availability.available()
-          : Availability.unavailable("Please login first");
+          : Availability.unavailable(messageProvider.getTranslation("strings.login"));
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Component
 @ConfigurationProperties(prefix = "questions")
-public class QuestionProperties {
+public class QuestionProperties implements QuestionFilesPathsHolder {
     private List<QuestionsFilePathForLocale> files;
 
     private double passRate;
@@ -20,7 +20,7 @@ public class QuestionProperties {
         this.passRate = passRate;
     }
 
-    public List<QuestionsFilePathForLocale> getFiles() {
+    public List<QuestionsFilePathForLocale> getFilesPaths() {
         return files;
     }
 

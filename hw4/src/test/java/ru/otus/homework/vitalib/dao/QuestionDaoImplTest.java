@@ -5,6 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.homework.vitalib.converter.CsvConverter;
+import ru.otus.homework.vitalib.service.QuestionFilePathProvider;
 import ru.otus.homework.vitalib.utils.CsvParser;
 import ru.otus.homework.vitalib.utils.FileReaderProvider;
 import ru.otus.homework.vitalib.model.Question;
@@ -28,6 +29,9 @@ class QuestionDaoImplTest {
   private CsvParser csvParser;
   @Mock
   private CsvConverter csvConverter;
+
+  @Mock
+  QuestionFilePathProvider questionFilePathProvider;
 
   @InjectMocks
   private QuestionDaoCsv questionDaoCsv;
