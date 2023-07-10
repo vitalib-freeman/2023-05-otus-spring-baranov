@@ -27,26 +27,4 @@ public class QuestionProperties implements QuestionFilesPathsHolder {
     public void setFiles(List<QuestionsFilePathForLocale> files) {
         this.files = files;
     }
-
-    public static class QuestionsFilePathForLocale {
-        private String filePath;
-
-        private String locale;
-
-        public String getFilePath() {
-            return filePath;
-        }
-
-        public void setFilePath(String filePath) {
-            this.filePath = filePath;
-        }
-
-        public String getLocale() {
-            return locale;
-        }
-
-        public void setLocale(String locale) {
-            this.locale = locale;
-        }
-    }
 }

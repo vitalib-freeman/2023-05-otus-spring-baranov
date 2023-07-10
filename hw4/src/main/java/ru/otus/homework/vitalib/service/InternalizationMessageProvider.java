@@ -8,7 +8,6 @@ import java.util.Locale;
 
 @Service
 public class InternalizationMessageProvider implements MessageProvider {
-    //TODO get from properties
     private final Locale locale;
 
     private final MessageSource messageSource;

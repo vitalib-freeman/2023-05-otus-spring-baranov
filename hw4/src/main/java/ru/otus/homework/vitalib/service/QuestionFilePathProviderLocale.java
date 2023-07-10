@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import ru.otus.homework.vitalib.config.QuestionFilesPathsHolder;
-import ru.otus.homework.vitalib.config.QuestionProperties;
+import ru.otus.homework.vitalib.config.QuestionsFilePathForLocale;
 
 @Service
 @RequiredArgsConstructor
@@ -16,9 +16,9 @@ public class QuestionFilePathProviderLocale implements QuestionFilePathProvider 
     @Override
     public String getPath() {
         return questionFilesPathsHolder.getFilesPaths().stream()
-          .filter(localeFile -> localeFile.getLocale().equals(LocaleContextHolder.getLocale().toLanguageTag()))
-          .map(QuestionProperties.QuestionsFilePathForLocale::getFilePath)
+          .filter(localeFile -> localeFile.locale().equals(LocaleContextHolder.getLocale().toLanguageTag()))
+          .map(QuestionsFilePathForLocale::filePath)
           .findFirst()
-          .orElseGet(() -> questionFilesPathsHolder.getFilesPaths().get(0).getFilePath());
+          .orElseGet(() -> questionFilesPathsHolder.getFilesPaths().get(0).filePath());
     }
 }
