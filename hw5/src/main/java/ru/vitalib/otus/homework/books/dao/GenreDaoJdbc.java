@@ -2,6 +2,7 @@ package ru.vitalib.otus.homework.books.dao;
 
 import lombok.AllArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -9,6 +10,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.vitalib.otus.homework.books.domain.Genre;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +38,7 @@ public class GenreDaoJdbc implements GenreDao {
             return jdbc.queryForObject(
               "select id, name from genre where id =:id",
               Map.of("id", id),
-              (rs, rowNum) -> new Genre(rs.getLong("id"), rs.getString("name"))
+              new GenreRowMapper()
             );
         } catch (EmptyResultDataAccessException exception) {
             return null;
@@ -66,7 +69,7 @@ public class GenreDaoJdbc implements GenreDao {
     public List<Genre> findAll() {
         return jdbc.query(
           "select id, name from genre",
-          (rs, rowNum) -> new Genre(rs.getLong("id"), rs.getString("name"))
+          new GenreRowMapper()
         );
     }
 
@@ -76,10 +79,18 @@ public class GenreDaoJdbc implements GenreDao {
             return jdbc.queryForObject(
               "select id, name from genre where name =:name",
               Map.of("name", genreName),
-              (rs, rowNum) -> new Genre(rs.getLong("id"), rs.getString("name"))
+              new GenreRowMapper()
             );
         } catch (EmptyResultDataAccessException exception) {
             return null;
         }
     }
+
+    private static class GenreRowMapper implements RowMapper<Genre> {
+        @Override
+        public Genre mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Genre(rs.getLong("id"), rs.getString("name"));
+        }
+    }
+
 }

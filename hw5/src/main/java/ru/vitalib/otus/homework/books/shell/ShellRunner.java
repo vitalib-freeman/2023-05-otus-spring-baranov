@@ -34,10 +34,9 @@ public class ShellRunner {
                              @ShellOption("author") String author,
                              @ShellOption("genre") String genre) {
 
-        Long bookId;
         try {
-            bookId = bookService.createBook(bookTitle, author, genre);
-            return String.format("Book with id %d is created", bookId);
+            Book book = bookService.createBook(bookTitle, author, genre);
+            return String.format("Book with id %d is created", book.getId());
         } catch (BookNotFoundException ex) {
             return "Error: Book doesn't exist";
         } catch (GenreNotFoundException ex) {

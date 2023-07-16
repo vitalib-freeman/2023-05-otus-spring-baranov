@@ -6,7 +6,7 @@ import ru.vitalib.otus.homework.books.domain.Book;
 import java.util.List;
 
 public interface BookService {
-    Long createBook(String title, String author, String genre);
+    Book createBook(String title, String author, String genre);
 
     void deleteBook(long id);
 

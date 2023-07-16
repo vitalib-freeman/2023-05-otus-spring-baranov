@@ -15,8 +15,7 @@ import static ru.vitalib.otus.homework.books.PreInsertedTestData.EXISTING_AUTHOR
 
 @JdbcTest
 @Import(AuthorDaoJdbc.class)
-public
-class AuthorDaoJdbcTest {
+public class AuthorDaoJdbcTest {
 
     @Autowired
     private AuthorDaoJdbc dao;

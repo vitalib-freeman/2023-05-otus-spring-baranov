@@ -23,11 +23,12 @@ public class SimpleBookService implements BookService {
 
 
     @Override
-    public Long createBook(String title, String authorName, String genreName) {
+    public Book createBook(String title, String authorName, String genreName) {
         Author author = authorService.getAuthorByName(authorName);
         Genre genre = genreService.getGenreByName(genreName);
         Book book = new Book(title, genre, author);
-        return bookDao.save(book);
+        bookDao.save(book);
+        return book;
     }
 
     @Override

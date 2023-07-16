@@ -2,6 +2,7 @@ package ru.vitalib.otus.homework.books.dao;
 
 import lombok.AllArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -9,6 +10,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.vitalib.otus.homework.books.domain.Author;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +26,7 @@ public class AuthorDaoJdbc implements AuthorDao {
             return jdbc.queryForObject(
               "select id, name from author where name =:name",
               Map.of("name", authorName),
-              (rs, rowNum) -> new Author(rs.getLong("id"), rs.getString("name"))
+              new AuthorRowMapper()
             );
         } catch (EmptyResultDataAccessException ex) {
             return null;
@@ -48,7 +51,7 @@ public class AuthorDaoJdbc implements AuthorDao {
             return jdbc.queryForObject(
               "select id, name from author where id =:id",
               Map.of("id", id),
-              (rs, rowNum) -> new Author(rs.getLong("id"), rs.getString("name"))
+              new AuthorRowMapper()
             );
         } catch (EmptyResultDataAccessException exception) {
             return null;
@@ -79,7 +82,14 @@ public class AuthorDaoJdbc implements AuthorDao {
     public List<Author> findAll() {
         return jdbc.query(
           "select id, name from author",
-          (rs, rowNum) -> new Author(rs.getLong("id"), rs.getString("name"))
+          new AuthorRowMapper()
         );
+    }
+
+    private static class AuthorRowMapper implements RowMapper<Author> {
+        @Override
+        public Author mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Author(rs.getLong("id"), rs.getString("name"));
+        }
     }
 }
