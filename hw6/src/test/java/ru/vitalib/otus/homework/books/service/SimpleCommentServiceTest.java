@@ -29,13 +29,13 @@ public
 class SimpleCommentServiceTest {
 
     @Autowired
-    SimpleCommentService simpleCommentService;
+    private SimpleCommentService simpleCommentService;
 
     @MockBean
-    BookDao bookDao;
+    private BookDao bookDao;
 
     @MockBean
-    CommentDao commentDao;
+    private CommentDao commentDao;
 
     @Test
     @DisplayName("Create comment for existing book")

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vitalib.otus.homework.books.converter.BookConverter;
+import ru.vitalib.otus.homework.books.dao.BookDao;
 import ru.vitalib.otus.homework.books.domain.Author;
 import ru.vitalib.otus.homework.books.domain.Book;
 import ru.vitalib.otus.homework.books.domain.Genre;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SimpleBookService implements BookService {
 
-    private final ru.vitalib.otus.homework.books.dao.BookDao bookDao;
+    private final BookDao bookDao;
 
     private final GenreService genreService;
 

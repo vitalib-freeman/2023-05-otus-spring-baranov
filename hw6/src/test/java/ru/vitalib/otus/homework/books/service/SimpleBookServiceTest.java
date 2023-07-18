@@ -31,13 +31,13 @@ public
 class SimpleBookServiceTest {
 
     @Autowired
-    BookService bookService;
+    private BookService bookService;
     @MockBean
-    ru.vitalib.otus.homework.books.dao.BookDao bookDao;
+    private BookDao bookDao;
     @MockBean
-    AuthorService authorService;
+    private AuthorService authorService;
     @MockBean
-    GenreService genreService;
+    private GenreService genreService;
 
     @Test
     @DisplayName("Get all books")
