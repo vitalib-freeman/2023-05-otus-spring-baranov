@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 import ru.vitalib.otus.homework.books.domain.Book;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,8 +13,7 @@ import static ru.vitalib.otus.homework.books.PreInsertedTestData.EXISTING_BOOK;
 import static ru.vitalib.otus.homework.books.PreInsertedTestData.EXISTING_GENRE;
 
 @DataJpaTest
-@Import(BookDaoJPA.class)
-class BookDaoJPATest {
+class BookDaoTest {
 
     public static final int NON_EXISTING_BOOK_ID = -1;
 
@@ -24,12 +22,12 @@ class BookDaoJPATest {
     private TestEntityManager em;
 
     @Autowired
-    private BookDaoJPA bookDaoJPA;
+    private BookDao bookDao;
 
     @Test
     @DisplayName("Find book by id")
     void findById() {
-        assertThat(bookDaoJPA.findById(EXISTING_BOOK.getId()))
+        assertThat(bookDao.findById(EXISTING_BOOK.getId()))
           .isNotNull()
           .matches(b -> b.getName().equals("Хочу быть дворником"))
           .matches(b -> b.getAuthor().getName().equals("Веллер Михаил"))
@@ -40,9 +38,9 @@ class BookDaoJPATest {
     @Test
     @DisplayName("Delete book")
     void delete() {
-        bookDaoJPA.delete(EXISTING_BOOK.getId());
+        bookDao.deleteById(EXISTING_BOOK.getId());
 
-        assertThat(bookDaoJPA.findById(EXISTING_BOOK.getId())).isNull();
+        assertThat(bookDao.findById(EXISTING_BOOK.getId())).isNull();
     }
 
     @Test
@@ -50,7 +48,7 @@ class BookDaoJPATest {
     void update() {
         Book updatedBook = new Book(EXISTING_BOOK.getId(), "Паранойа", EXISTING_GENRE, EXISTING_AUTHOR);
 
-        bookDaoJPA.save(updatedBook);
+        bookDao.save(updatedBook);
 
         assertThat(em.find(Book.class, EXISTING_BOOK.getId()))
           .matches(b -> b.getName().equals("Паранойа"));
@@ -59,7 +57,7 @@ class BookDaoJPATest {
     @Test
     @DisplayName("Get all books with all information")
     void getAll() {
-        assertThat(bookDaoJPA.findAll()).isNotNull().hasSize(1);
+        assertThat(bookDao.findAll()).isNotNull().hasSize(1);
     }
 
     @Test
@@ -67,7 +65,7 @@ class BookDaoJPATest {
     void save() {
         Book book = new Book("Артиллерист", EXISTING_GENRE, EXISTING_AUTHOR);
 
-        Book savedBook = bookDaoJPA.save(book);
+        Book savedBook = bookDao.save(book);
 
         assertThat(em.find(Book.class, savedBook.getId()))
           .isNotNull().matches(b -> !b.getName().equals(""))

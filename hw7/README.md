@@ -11,7 +11,7 @@ mvn clean package
 ## Usage
 
 ```bash
-java -jar target/hw6-0.0.1-SNAPSHOT.jar 
+java -jar target/hw7-0.0.1-SNAPSHOT.jar 
 ```
 
 ## License

@@ -46,7 +46,7 @@ public class SimpleCommentService implements CommentService {
     @Transactional
     @Override
     public void deleteComment(long commentId) {
-        commentDao.delete(commentId);
+        commentDao.deleteById(commentId);
     }
 
     @Transactional(readOnly = true)

@@ -41,7 +41,7 @@ public class SimpleBookService implements BookService {
     @Transactional
     @Override
     public void deleteBook(long id) {
-        bookDao.delete(id);
+        bookDao.deleteById(id);
     }
 
     @Transactional

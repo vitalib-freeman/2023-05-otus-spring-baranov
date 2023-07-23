@@ -119,7 +119,7 @@ class SimpleCommentServiceTest {
 
         simpleCommentService.deleteComment(commentId);
 
-        verify(commentDao).delete(commentId);
+        verify(commentDao).deleteById(commentId);
     }
 
     @Test

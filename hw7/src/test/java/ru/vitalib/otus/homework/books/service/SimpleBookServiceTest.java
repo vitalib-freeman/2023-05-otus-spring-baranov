@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.vitalib.otus.homework.books.converter.BookConverter;
 import ru.vitalib.otus.homework.books.dao.BookDao;
-import ru.vitalib.otus.homework.books.domain.Book;
 import ru.vitalib.otus.homework.books.dto.BookDto;
 import ru.vitalib.otus.homework.books.exception.AuthorNotFoundException;
 import ru.vitalib.otus.homework.books.exception.BookNotFoundException;
@@ -20,10 +19,11 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static ru.vitalib.otus.homework.books.PreInsertedTestData.*;
+import static ru.vitalib.otus.homework.books.PreInsertedTestData.EXISTING_AUTHOR;
+import static ru.vitalib.otus.homework.books.PreInsertedTestData.EXISTING_BOOK;
+import static ru.vitalib.otus.homework.books.PreInsertedTestData.EXISTING_GENRE;
 
 @DisplayName("Test book service")
 @SpringBootTest(classes = {SimpleBookService.class, BookConverter.class})
@@ -110,7 +110,7 @@ class SimpleBookServiceTest {
     void deleteBook() {
         bookService.deleteBook(EXISTING_BOOK.getId());
 
-        verify(bookDao).delete(EXISTING_BOOK.getId());
+        verify(bookDao).deleteById(EXISTING_BOOK.getId());
     }
 
     @Test
