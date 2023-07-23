@@ -21,5 +21,6 @@
     <modules>
         <module>hw4</module>
         <module>hw5</module>
+        <module>hw6</module>
     </modules>
 </project>
