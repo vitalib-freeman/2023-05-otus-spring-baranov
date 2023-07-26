@@ -13,7 +13,7 @@ import static ru.vitalib.otus.homework.books.PreInsertedTestData.EXISTING_BOOK;
 import static ru.vitalib.otus.homework.books.PreInsertedTestData.EXISTING_GENRE;
 
 @DataJpaTest
-class BookDaoTest {
+class BookRepositoryTest {
 
     public static final int NON_EXISTING_BOOK_ID = -1;
 
@@ -22,12 +22,12 @@ class BookDaoTest {
     private TestEntityManager em;
 
     @Autowired
-    private BookDao bookDao;
+    private BookRepository bookRepository;
 
     @Test
     @DisplayName("Find book by id")
     void findById() {
-        assertThat(bookDao.findById(EXISTING_BOOK.getId()))
+        assertThat(bookRepository.findById(EXISTING_BOOK.getId()))
           .isNotNull()
           .matches(b -> b.getName().equals("Хочу быть дворником"))
           .matches(b -> b.getAuthor().getName().equals("Веллер Михаил"))
@@ -38,9 +38,9 @@ class BookDaoTest {
     @Test
     @DisplayName("Delete book")
     void delete() {
-        bookDao.deleteById(EXISTING_BOOK.getId());
+        bookRepository.deleteById(EXISTING_BOOK.getId());
 
-        assertThat(bookDao.findById(EXISTING_BOOK.getId())).isNull();
+        assertThat(bookRepository.findById(EXISTING_BOOK.getId())).isNull();
     }
 
     @Test
@@ -48,7 +48,7 @@ class BookDaoTest {
     void update() {
         Book updatedBook = new Book(EXISTING_BOOK.getId(), "Паранойа", EXISTING_GENRE, EXISTING_AUTHOR);
 
-        bookDao.save(updatedBook);
+        bookRepository.save(updatedBook);
 
         assertThat(em.find(Book.class, EXISTING_BOOK.getId()))
           .matches(b -> b.getName().equals("Паранойа"));
@@ -57,7 +57,7 @@ class BookDaoTest {
     @Test
     @DisplayName("Get all books with all information")
     void getAll() {
-        assertThat(bookDao.findAll()).isNotNull().hasSize(1);
+        assertThat(bookRepository.findAll()).isNotNull().hasSize(1);
     }
 
     @Test
@@ -65,7 +65,7 @@ class BookDaoTest {
     void save() {
         Book book = new Book("Артиллерист", EXISTING_GENRE, EXISTING_AUTHOR);
 
-        Book savedBook = bookDao.save(book);
+        Book savedBook = bookRepository.save(book);
 
         assertThat(em.find(Book.class, savedBook.getId()))
           .isNotNull().matches(b -> !b.getName().equals(""))

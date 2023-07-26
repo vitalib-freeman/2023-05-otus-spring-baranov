@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.vitalib.otus.homework.books.converter.BookConverter;
-import ru.vitalib.otus.homework.books.dao.BookDao;
+import ru.vitalib.otus.homework.books.dao.BookRepository;
+import ru.vitalib.otus.homework.books.dao.CommentRepository;
 import ru.vitalib.otus.homework.books.dto.BookDto;
 import ru.vitalib.otus.homework.books.exception.AuthorNotFoundException;
 import ru.vitalib.otus.homework.books.exception.BookNotFoundException;
@@ -33,16 +34,19 @@ class SimpleBookServiceTest {
     @Autowired
     private BookService bookService;
     @MockBean
-    private BookDao bookDao;
+    private BookRepository bookRepository;
     @MockBean
     private AuthorService authorService;
     @MockBean
     private GenreService genreService;
 
+    @MockBean
+    CommentRepository commentRepository;
+
     @Test
     @DisplayName("Get all books")
     void getAllBooks() {
-        when(bookDao.findAll()).thenReturn(List.of(EXISTING_BOOK));
+        when(bookRepository.findAll()).thenReturn(List.of(EXISTING_BOOK));
         List<BookDto> allBooks = bookService.getAllBooks();
 
         assertThat(allBooks)
@@ -60,7 +64,7 @@ class SimpleBookServiceTest {
 
         verify(authorService).getAuthorByName(EXISTING_AUTHOR.getName());
         verify(genreService).getGenreByName(EXISTING_GENRE.getName());
-        verify(bookDao).save(any());
+        verify(bookRepository).save(any());
     }
 
     @Test
@@ -84,22 +88,22 @@ class SimpleBookServiceTest {
     @Test
     @DisplayName("Update book")
     void updateBookWithExistentGenreAndAuthor() {
-        when(bookDao.findById(EXISTING_BOOK.getId())).thenReturn(EXISTING_BOOK);
+        when(bookRepository.findById(EXISTING_BOOK.getId())).thenReturn(EXISTING_BOOK);
         when(authorService.getAuthorByName(EXISTING_AUTHOR.getName())).thenReturn(EXISTING_AUTHOR);
         when(genreService.getGenreByName(EXISTING_GENRE.getName())).thenReturn(EXISTING_GENRE);
 
         bookService.updateBook(EXISTING_BOOK.getId(), "OtherTitle", EXISTING_AUTHOR.getName(), EXISTING_GENRE.getName());
 
-        verify(bookDao).findById(EXISTING_BOOK.getId());
+        verify(bookRepository).findById(EXISTING_BOOK.getId());
         verify(authorService).getAuthorByName(EXISTING_AUTHOR.getName());
         verify(genreService).getGenreByName(EXISTING_GENRE.getName());
-        verify(bookDao).save(ArgumentMatchers.argThat(b -> b.getName().equals("OtherTitle")));
+        verify(bookRepository).save(ArgumentMatchers.argThat(b -> b.getName().equals("OtherTitle")));
     }
 
     @Test
     @DisplayName("Update non-existent book throw error")
     void updateNonExistentBook() {
-        when(bookDao.findById(EXISTING_BOOK.getId())).thenReturn(null);
+        when(bookRepository.findById(EXISTING_BOOK.getId())).thenReturn(null);
 
         assertThatThrownBy(() -> bookService.updateBook(EXISTING_BOOK.getId(), "OtherTitle", EXISTING_AUTHOR.getName(), EXISTING_GENRE.getName()))
           .isInstanceOf(NotFoundException.class);
@@ -110,7 +114,8 @@ class SimpleBookServiceTest {
     void deleteBook() {
         bookService.deleteBook(EXISTING_BOOK.getId());
 
-        verify(bookDao).deleteById(EXISTING_BOOK.getId());
+        verify(bookRepository).deleteById(EXISTING_BOOK.getId());
+        verify(commentRepository).deleteByBookId(EXISTING_BOOK.getId());
     }
 
     @Test
@@ -118,6 +123,6 @@ class SimpleBookServiceTest {
     public void getBookById() {
         assertThatThrownBy(() -> bookService.getBookById(EXISTING_BOOK.getId()))
           .isInstanceOf(BookNotFoundException.class);
-        verify(bookDao).findById(EXISTING_BOOK.getId());
+        verify(bookRepository).findById(EXISTING_BOOK.getId());
     }
 }

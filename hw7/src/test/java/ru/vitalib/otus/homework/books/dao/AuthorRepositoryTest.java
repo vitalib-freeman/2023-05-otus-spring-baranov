@@ -8,15 +8,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static ru.vitalib.otus.homework.books.PreInsertedTestData.EXISTING_AUTHOR;
 
 @DataJpaTest
-class AuthorDaoTest {
+class AuthorRepositoryTest {
 
     @Autowired
-    private AuthorDao authorDao;
+    private AuthorRepository authorRepository;
 
 
     @Test
     void findByName() {
-        assertThat(authorDao.findByName("Веллер Михаил"))
+        assertThat(authorRepository.findByName("Веллер Михаил"))
           .isEqualTo(EXISTING_AUTHOR);
     }
 }

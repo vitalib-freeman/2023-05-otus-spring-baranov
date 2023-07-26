@@ -15,19 +15,19 @@ import static ru.vitalib.otus.homework.books.PreInsertedTestData.EXISTING_BOOK;
 import static ru.vitalib.otus.homework.books.PreInsertedTestData.EXISTING_COMMENT;
 
 @DataJpaTest
-class CommentDaoTest {
+class CommentRepositoryTest {
 
   private static final long EXISTING_COMMENT_ID = 1L;
   @Autowired
-  TestEntityManager em;
+  private TestEntityManager em;
 
   @Autowired
-  CommentDao commentDao;
+  CommentRepository commentRepository;
 
   @Test
   @DisplayName("Find comments by book id")
   public void findCommentForBook() {
-    List<Comment> comments = commentDao.findByBookId(EXISTING_BOOK.getId());
+    List<Comment> comments = commentRepository.findByBookId(EXISTING_BOOK.getId());
 
     assertThat(comments)
       .hasSize(1)
@@ -44,7 +44,7 @@ class CommentDaoTest {
     em.persist(comment);
     comment.setText("amended");
 
-    commentDao.save(comment);
+    commentRepository.save(comment);
 
     TypedQuery<String> query = em.getEntityManager().createQuery("select c.text from Comment c where c.id = :commentId", String.class);
     query.setParameter("commentId", comment.getId());
@@ -55,7 +55,7 @@ class CommentDaoTest {
   @Test
   @DisplayName("Save comment")
   void save() {
-    Comment comment = commentDao.save(new Comment(1, "comment", EXISTING_BOOK));
+    Comment comment = commentRepository.save(new Comment(1, "comment", EXISTING_BOOK));
 
     assertThat(comment.getId()).isNotEqualTo(0L);
   }
@@ -65,7 +65,7 @@ class CommentDaoTest {
   void delete() {
     Comment comment = em.find(Comment.class, EXISTING_COMMENT_ID);
 
-    commentDao.deleteById(comment.getId());
+    commentRepository.deleteById(comment.getId());
 
     assertThat(em.find(Comment.class, comment.getId()))
         .isEqualTo(null);
@@ -74,7 +74,7 @@ class CommentDaoTest {
   @Test
   @DisplayName("Find comment by id")
   void findById() {
-    assertThat(commentDao.findById(EXISTING_COMMENT_ID))
+    assertThat(commentRepository.findById(EXISTING_COMMENT_ID))
       .matches(c -> c.getId() == EXISTING_COMMENT.getId())
       .matches(c -> c.getText().equals(EXISTING_COMMENT.getText()))
       .matches(c -> c.getBook().getId() == EXISTING_COMMENT.getBook().getId());

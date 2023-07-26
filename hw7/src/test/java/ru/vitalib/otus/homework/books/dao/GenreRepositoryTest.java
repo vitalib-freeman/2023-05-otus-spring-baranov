@@ -10,15 +10,15 @@ import static ru.vitalib.otus.homework.books.PreInsertedTestData.EXISTING_GENRE;
 
 @DisplayName("GenreDao test")
 @DataJpaTest
-class GenreDaoTest {
+class GenreRepositoryTest {
 
     @Autowired
-    private GenreDao genreDao;
+    private GenreRepository genreRepository;
 
     @Test
     @DisplayName("Find genre by name")
     void findByName() {
-        assertThat(genreDao.findByName("Детектив")).usingRecursiveComparison()
+        assertThat(genreRepository.findByName("Детектив")).usingRecursiveComparison()
           .isEqualTo(EXISTING_GENRE);
     }
 }

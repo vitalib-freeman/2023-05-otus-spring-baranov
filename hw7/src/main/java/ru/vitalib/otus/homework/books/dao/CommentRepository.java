@@ -5,8 +5,10 @@ import ru.vitalib.otus.homework.books.domain.Comment;
 
 import java.util.List;
 
-public interface CommentDao extends JpaRepository<Comment, Long> {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
   Comment findById(long commentId);
 
   List<Comment> findByBookId(long bookId);
+
+  void deleteByBookId(long id);
 }

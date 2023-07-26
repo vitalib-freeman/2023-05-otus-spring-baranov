@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.vitalib.otus.homework.books.converter.CommentConverter;
-import ru.vitalib.otus.homework.books.dao.BookDao;
-import ru.vitalib.otus.homework.books.dao.CommentDao;
+import ru.vitalib.otus.homework.books.dao.BookRepository;
+import ru.vitalib.otus.homework.books.dao.CommentRepository;
 import ru.vitalib.otus.homework.books.domain.Book;
 import ru.vitalib.otus.homework.books.domain.Comment;
 import ru.vitalib.otus.homework.books.dto.CommentDto;
@@ -32,10 +32,10 @@ class SimpleCommentServiceTest {
     private SimpleCommentService simpleCommentService;
 
     @MockBean
-    private BookDao bookDao;
+    private BookRepository bookRepository;
 
     @MockBean
-    private CommentDao commentDao;
+    private CommentRepository commentRepository;
 
     @Test
     @DisplayName("Create comment for existing book")
@@ -44,9 +44,9 @@ class SimpleCommentServiceTest {
         long bookId = 1;
         Comment commentForSave = new Comment();
         commentForSave.setText(commentText);
-        when(bookDao.findById(bookId))
+        when(bookRepository.findById(bookId))
           .thenReturn(new Book(bookId, null, null, null));
-        when(commentDao.save(any()))
+        when(commentRepository.save(any()))
           .thenReturn(commentForSave);
 
         CommentDto comment = simpleCommentService.createComment(commentText, bookId);
@@ -54,15 +54,15 @@ class SimpleCommentServiceTest {
         assertThat(comment)
           .matches(c -> c.text().equals(commentText));
 
-        verify(bookDao).findById(bookId);
-        verify(commentDao).save(ArgumentMatchers.argThat(c -> c.getText().equals(commentText)));
+        verify(bookRepository).findById(bookId);
+        verify(commentRepository).save(ArgumentMatchers.argThat(c -> c.getText().equals(commentText)));
     }
 
     @Test
     @DisplayName("Create comment for non existing book")
     public void createCommentForNonExistingBook() {
         long bookId = 5;
-        when(bookDao.findById(bookId))
+        when(bookRepository.findById(bookId))
           .thenReturn(null);
 
         assertThatThrownBy(() -> simpleCommentService.createComment("comment text", bookId))
@@ -76,7 +76,7 @@ class SimpleCommentServiceTest {
         Comment expectedComment = new Comment();
         expectedComment.setId(commentId);
         expectedComment.setText("expected text");
-        when(commentDao.findById(commentId)).thenReturn(expectedComment);
+        when(commentRepository.findById(commentId)).thenReturn(expectedComment);
 
         CommentDto comment = simpleCommentService.getCommentById(commentId);
 
@@ -93,19 +93,19 @@ class SimpleCommentServiceTest {
         Comment expectedComment = new Comment();
         expectedComment.setId(commentId);
         expectedComment.setText("previous text");
-        when(commentDao.findById(commentId))
+        when(commentRepository.findById(commentId))
           .thenReturn(expectedComment);
 
         simpleCommentService.updateComment(commentId, newCommentText);
 
-        verify(commentDao).save(ArgumentMatchers.argThat(c -> c.getId() == commentId && c.getText().equals(newCommentText)));
+        verify(commentRepository).save(ArgumentMatchers.argThat(c -> c.getId() == commentId && c.getText().equals(newCommentText)));
     }
 
     @Test
     @DisplayName("Update non-existing comment")
     public void updateNonExistingComment() {
         long commentId = 1;
-        when(commentDao.findById(commentId))
+        when(commentRepository.findById(commentId))
           .thenReturn(null);
 
         assertThatThrownBy(() -> simpleCommentService.updateComment(commentId, "newCommentText"))
@@ -119,14 +119,14 @@ class SimpleCommentServiceTest {
 
         simpleCommentService.deleteComment(commentId);
 
-        verify(commentDao).deleteById(commentId);
+        verify(commentRepository).deleteById(commentId);
     }
 
     @Test
     @DisplayName("Get comments for book")
     public void getCommentsForBook() {
         long bookId = 1;
-        when(commentDao.findByBookId(bookId))
+        when(commentRepository.findByBookId(bookId))
           .thenReturn(List.of(new Comment()));
 
         List<CommentDto> allBookComments = simpleCommentService.getBookComments(bookId);
